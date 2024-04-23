@@ -1,0 +1,94 @@
+---
+title: "Introduction to SpatialTouchstone"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to SpatialTouchstone}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+pkgdown:
+  as_is: true
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+```{r setup}
+library(SpatialTouchstone)
+```
+
+## Xenium as an example 
+
+### Read Data 
+
+
+```{r expMat}
+expMat ="/mnt/scratch1/Touchstone_data/new_data/TOUCHSTONE_EAP_XRS_FFPE_PR_3_UOA_C_R1/cell_feature_matrix"
+```
+
+```{r read data }
+# Do not return a seurat object 
+result <- readSpatial(sample_id = "test1",path="/mnt/scratch1/Touchstone_data/new_data/TOUCHSTONE_EAP_XRS_FFPE_PR_3_UOA_C_R1/",platform = "Xenium",seurat = FALSE)
+head(result$test1$TxMatrix[1:3])
+```
+
+
+It can return a `Seurat` Object by seting the `seurat=TRUE`.
+
+```{r read data as a seurat object,warning=FALSE}
+# Return a seurat object 
+result_seu <- readSpatial(sample_id = "test1",path="/mnt/scratch1/Touchstone_data/new_data/TOUCHSTONE_EAP_XRS_FFPE_PR_3_UOA_C_R1/",platform = "Xenium",seurat = TRUE)
+print(result_seu)
+```
+## QC 
+
+We have mutliple QC functions, when using seurat object as the input, it will return a dataframe which can be used to generate plot using our plot functions.
+
+
+```{r getTxPerCell1}
+getTxPerCell_seu<- getTxPerCell(expMat="/mnt/scratch1/Touchstone_data/new_data/TOUCHSTONE_EAP_XRS_FFPE_PR_3_UOA_C_R1/cell_feature_matrix/",platform = "Xenium",seu_obj = result_seu)
+getTxPerCell_seu
+```
+
+```{r getTxPerArea}
+getTxPerArea_test_seu <- getTxPerArea(platform = "Xenium",seu_obj = result_seu)
+getTxPerArea_test_seu
+```
+```{r getNcells}
+getNcells_test_seu <- getNcells(expMat=expMat,platform = "Xenium",seu_obj = result_seu)
+getNcells_test_seu 
+```
+
+```{r getGlobalFDR}
+# getGlobalFDR_test_seu<- getGlobalFDR(tx_file = "/mnt/scratch1/Touchstone_data/new_data/TOUCHSTONE_EAP_XRS_FFPE_PR_3_UOA_C_R1/transcripts.csv.gz",platform = "Xenium",seu_obj = result_seu)
+# getGlobalFDR_test_seu
+```
+###  Notes: 
+
+getGlobalFDR: Need to be modified as a dataframe (getGlobalFDR_test_seu for input as seurat object )
+
+
+
+```{r getTxPerCell2}
+getTxPerCell_test_seu<- getTxPerCell(platform = "Xenium",seu_obj = result_seu)
+getTxPerCell_test_seu
+```
+
+## To gerante a QC report 
+
+It will automatically generate a pdf qc report 
+
+
+```{r gerante a QC report}
+
+# genereateQCreport_table_1<- genereateQCreport_table(seu_obj = result_seu)
+# genereateQCreport_table_1
+#   sample_id platform ncell entropy_value sparsity_value tx_perarea tx_percell cell_tx_fraction mean_ratio max_ratio
+# 1     test1   Xenium 80939         0.497          0.936  0.8983494   63.88845        0.7115717   2.306417  4.290015
+```
+
+

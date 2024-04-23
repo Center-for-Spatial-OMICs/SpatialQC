@@ -1,0 +1,53 @@
+---
+title: "SpatiaTouchstone"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{SpatiaTouchstone}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+pkgdown:
+  as_is: true
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(SpatialTouchstone)
+```
+
+```{r load df_samples}
+df_samples <- data.frame(
+  dataset = c("TOUCHSTONE_STJ_CR_FFPE_AP_6_WCM_N_R1_2", "TOUCHSTONE_WCM_XR_FFPE_AP_2_WCM_N_R1", "Xenium_Brain_Best", "Xenium_Brain", "CosMx_Lung_KulasingheA"),
+  platform = c("CosMx", "Xenium", "Xenium", "Xenium", "CosMx"),
+  expMat = c("/mnt/scratch1/Touchstone_data/new_data/TOUCHSTONE_STJ_CR_FFPE_AP_6_WCM_N_R1_2/TOUCHSTONE_STJ_CR_FFPE_AP_2_WCM_N_R1_exprMat.csv",
+             "/mnt/scratch1/Touchstone_data/new_data/TOUCHSTONE_WCM_XR_FFPE_AP_2_WCM_N_R1",
+             "/mnt/scratch1/Touchstone_data/public_data/Xenium_Brain_Best/organized_files/sample",
+             "/mnt/scratch1/Touchstone_data/public_data/Xenium_Brain/organized_files/sample",
+             "/mnt/scratch1/Touchstone_data/public_data/CosMx_Lung_KulasingheA/organized_files/TMA_A_8_Case_12_sample/GSM8021248_TMA_A_8_Case_12_FOV_11_12_bound_exprMat_file.csv.gz"),
+  tx_file = c("/mnt/scratch1/Touchstone_data/new_data/TOUCHSTONE_STJ_CR_FFPE_AP_6_WCM_N_R1_2/TOUCHSTONE_STJ_CR_FFPE_AP_2_WCM_N_R1_tx.csv",
+              "/mnt/scratch1/Touchstone_data/new_data/TOUCHSTONE_WCM_XR_FFPE_AP_2_WCM_N_R1/transcripts.csv.gz",
+              "/mnt/scratch1/Touchstone_data/public_data/Xenium_Brain_Best/organized_files/sample/transcripts.csv",
+              "/mnt/scratch1/Touchstone_data/public_data/Xenium_Brain/organized_files/sample/transcripts.csv.gz",
+              "/mnt/scratch1/Touchstone_data/public_data/CosMx_Lung_KulasingheA/organized_files/TMA_A_8_Case_12_sample/GSM8021248_TMA_A_8_Case_12_FOV_11_12_bound_tx_file.csv.gz"),
+  cellSegMeta = c("/mnt/scratch1/Touchstone_data/new_data/TOUCHSTONE_STJ_CR_FFPE_AP_6_WCM_N_R1_2/TOUCHSTONE_STJ_CR_FFPE_AP_2_WCM_N_R1_metadata.csv",
+                  "/mnt/scratch1/Touchstone_data/new_data/TOUCHSTONE_WCM_XR_FFPE_AP_2_WCM_N_R1/cells.csv.gz",
+                  "/mnt/scratch1/Touchstone_data/public_data/Xenium_Brain_Best/organized_files/sample/cells.csv.gz",
+                  "/mnt/scratch1/Touchstone_data/public_data/Xenium_Brain/organized_files/sample/cells.csv.gz",
+                  "/mnt/scratch1/Touchstone_data/public_data/CosMx_Lung_KulasingheA/organized_files/TMA_A_8_Case_12_sample/GSM8021248_TMA_A_8_Case_12_FOV_11_12_bound_metadata_file.csv.gz")
+)
+#df_samples
+```
+
+```{r}
+all_metrics <- getAllMetrics(df_samples)
+```
+
+```{r}
+all_metrics
+```
+

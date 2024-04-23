@@ -1,0 +1,49 @@
+Package: SpatialQC
+Title: QC metrics and support for In-Situ Spatial data across different platforms
+Version: 0.0.0.9000
+Authors@R: 
+    c(person("Felipe", "Segato Dezem",role = c("aut", "cre"),email="felipe.segatodezem@stjude.org"),
+       person("Yutian","Liu",role = c("aut"),email="yutian.liu@stjude.org"),
+       person("Maycon","Marcao",role = c("aut"),email="Maycon.Marcao@stjude.org"),
+       person("David","Cook",role = c("aut"),email="David.Cook@uottawa.ca"))
+Description: It is an innovative tool designed to facilitate quality control for spatialomics technology data.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1
+Imports: 
+    Seurat,
+    dplyr,
+    ggplot2,
+    shadowtext,
+    scales,
+    cowplot,
+    data.table,
+    Matrix,
+    matrixStats,
+    SingleCellExperiment,
+    SpatialExperiment,
+    SpatialFeatureExperiment,
+    bluster,
+    BiocParallel,
+    BioQC,
+    coop,
+    fs,
+    NMI,
+    InSituType,
+    Voyager,
+    gridExtra,
+    magrittr,
+    scater,
+    spacexr,
+    tibble,
+    lsa
+URL: https://github.com/Margery0011/SpatiaTouchstone, https://margery0011.github.io/SpatiaTouchstone/
+BugReports: https://github.com/Margery0011/SpatiaTouchstone/issues
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0),
+    R.utils
+Config/testthat/edition: 3
+VignetteBuilder: knitr
