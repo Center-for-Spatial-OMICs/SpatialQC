@@ -397,7 +397,7 @@ readSpatial <- function(sample_id, path, platform=NULL, seurat=FALSE){
     coords <- as.matrix(coords[,1:2])
     colnames(coords) <- c("Tissue_1", "Tissue_2")
     rownames(coords) <- colnames(seu_obj)
-    seu_obj[["tissue"]] <- CreateDimReducObject(m , key="Tissue_", assay="RNA")
+    seu_obj[["tissue"]] <- CreateDimReducObject(coords , key="Tissue_", assay="RNA")
 
 
   } else if(platform == "Merscope"){
