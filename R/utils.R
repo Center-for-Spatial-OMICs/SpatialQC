@@ -624,7 +624,7 @@ getGlobalFDR <- function(seu_obj = NULL, features = NULL, tx_file ='path_to_txFi
     tx_df <- data.table::fread(tx_file)
 
     if(platform == 'Xenium') {
-      setnames(tx_df, "feature_name", "target")  # changing the colname to target to keep it consistent for all techs
+      data.table::setnames(tx_df, "feature_name", "target")  # changing the colname to target to keep it consistent for all techs
     }
   } else {
     # If Seurat object is provided, extract the necessary information from it
@@ -637,38 +637,45 @@ getGlobalFDR <- function(seu_obj = NULL, features = NULL, tx_file ='path_to_txFi
   }
 
   # Filter and process data
-  negProbes <- tx_df$target[grep('Neg*|SystemControl*|Blank*|BLANK*', tx_df$target)]
+  negProbes <- tx_df$target[grep('Neg*|Blank*|BLANK*', tx_df$target)]
   allGenes <- unique(tx_df[!target %in% negProbes, target])  # list of unique genes (non control or blank probes) in panel
+  allGenes <- allGenes[-grep('FalseCode*', allGenes)]
 
   # Create table with expression per each gene in panel
   expTableAll <- tx_df[, .(Count = .N), by = target]
   expTable <- expTableAll[expTableAll$target %in% allGenes, ]
-  expNeg <- sum(expTableAll[!expTableAll$target %in% allGenes, ]$Count)  # sum of all negative control or blank or unassigned barcodes (i.e non specific)
+  expNeg <- sum(expTableAll[expTableAll$target %in% unique(negProbes), ]$Count)  # sum of all negative control or blank or unassigned barcodes (i.e non specific)
 
   numGenes <- length(expTable$target)
-  numNeg <- length(expTableAll[!expTableAll$target %in% allGenes, ]$target)
+  numNeg <- length(expTableAll[expTableAll$target %in% unique(negProbes), ]$target)
 
-  expTable$FDR <- 1
-  for(i in allGenes) {
-    fdr = (expNeg / (expTable[expTable$target %in% i, ]$Count + expNeg)) * (numGenes / numNeg) * 1/100
-    expTable[target == i, FDR := fdr]
-  }
+  fdr = (expNeg / (sum(expTable$Count) + expNeg)) * (numGenes / numNeg) * 1/100
+
+  # expTable$FDR <- 1
+  # for(i in allGenes) {
+  #   fdr = (expNeg / (expTable[expTable$target %in% i, ]$Count + expNeg)) * (numGenes / numNeg) * 1/100
+  #   expTable[target == i, FDR := fdr]
+  # }
 
   # Decide what value to return
   if(is.null(features)) {
-    mean_fdr <- mean(expTable$FDR)
+    return(fdr)
   } else {
-    mean_fdr <- mean(expTable$FDR[expTable$target %in% features])
+    fdr = (expNeg / (sum(expTable[expTable$target %in% features, ]$Count) + expNeg)) * (numGenes / numNeg) * 1/100
+    return(fdr)
   }
 
   # Return results as a dataframe
-  res <- data.frame(
-    sample_id = sample_id,
-    platform = platform,
-    value = mean_fdr
-  )
+  if(!is.null(seu_obj)) {
+    res <- data.frame(
+      sample_id = sample_id,
+      platform = platform,
+      value = fdr
+    )
 
-  return(res)
+    return(res)
+  }
+
 }
 
 
