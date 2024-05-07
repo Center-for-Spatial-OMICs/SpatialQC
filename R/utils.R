@@ -49,7 +49,7 @@ globalVariables(c("target", "celltype_pred", "cell_type", "FDR", "nCount_RNA", "
 #' @export
 getAllMetrics <- function(df_samples, features = NULL) {
   # Ordering columns to match to mapply()
-  df_samples <- df_samples[, c('dataset','platform', 'expMat', 'tx_file', 'cellSegMeta')]
+  # df_samples <- df_samples[, c('dataset','platform', 'expMat', 'tx_file', 'cellSegMeta')]
 
   gStartTime <- Sys.time()
 
@@ -639,7 +639,7 @@ getGlobalFDR <- function(seu_obj = NULL, features = NULL, tx_file ='path_to_txFi
   # Filter and process data
   negProbes <- tx_df$target[grep('Neg*|Blank*|BLANK*', tx_df$target)]
   allGenes <- unique(tx_df[!target %in% negProbes, target])  # list of unique genes (non control or blank probes) in panel
-  allGenes <- allGenes[-grep('FalseCode*', allGenes)]
+  #allGenes <- allGenes[-grep('FalseCode*', allGenes)]
 
   # Create table with expression per each gene in panel
   expTableAll <- tx_df[, .(Count = .N), by = target]
@@ -1191,7 +1191,9 @@ getMeanSignalRatio <- function(seu_obj=NULL, features=NULL, platform=NULL, expMa
       exp <- t(exp) ## transposing for consistency  - row = genes, column= cells
     }
 
-    noise <- exp[grep('Neg*|SystemControl*|Blank*|BLANK*|Unassigned*', rownames(exp)), ]
+
+    #noise <- exp[grep('Neg*|SystemControl*|Blank*|BLANK*|Unassigned*', rownames(exp)), ]
+    noise <- exp[grep( 'Neg*|Blank*|BLANK*', rownames(exp)), ]
     exp <- exp[-grep('Neg*|SystemControl*|Blank*|BLANK*|Unassigned*', rownames(exp)),]
     #ratio <- mean( log10(rowMeans(exp + .1)) - log10(rowMeans(noise + .1)) )
 
@@ -1404,7 +1406,8 @@ getMaxRatio <- function(seu_obj = NULL, features=NULL, expMat ='path_to_expMat',
       exp <- t(exp) ## transposing for consistency  - row = genes, column= cells
     }
     tx_means <- rowMeans(exp[-grep('Neg*|SystemControl*|Blank*|BLANK*|Unassigned*', rownames(exp)),])
-    neg_probe_means <- rowMeans(exp[grep('Neg*|SystemControl*|Blank*|BLANK*|Unassigned*', rownames(exp)), ])
+    #neg_probe_means <- rowMeans(exp[grep('Neg*|SystemControl*|Blank*|BLANK*|Unassigned*', rownames(exp)), ])
+    neg_probe_means <- rowMeans(exp[grep('Neg*|Blank*|BLANK*', rownames(exp)), ])
 
     if(is.null(features)) {
       #return( log10(max(tx_means)) - log10(mean(neg_probe_means)) )
