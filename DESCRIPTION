@@ -23,27 +23,27 @@ Imports:
     matrixStats,
     SingleCellExperiment,
     SpatialExperiment,
-    SpatialFeatureExperiment,
     bluster,
     BiocParallel,
     BioQC,
     coop,
     fs,
     NMI,
-    InSituType,
     Voyager,
     gridExtra,
     magrittr,
-    scater,
-    spacexr,
     tibble,
-    lsa
+    lsa，
+    scater,
+    SpatialFeatureExperiment
 URL: https://github.com/Center-for-Spatial-OMICs/SpatialQC, https://margery0011.github.io/SpatiaTouchstone/
 BugReports: https://github.com/Margery0011/SpatiaTouchstone/issues
 Suggests: 
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
-    R.utils
+    R.utils,
+    InSituType,
+    spacexr
 Config/testthat/edition: 3
 VignetteBuilder: knitr

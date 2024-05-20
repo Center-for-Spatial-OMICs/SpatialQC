@@ -78,7 +78,7 @@ getTxPerCell_test_seu<- getTxPerCell(platform = "Xenium",seu_obj = result_seu)
 getTxPerCell_test_seu
 ```
 
-## To gerante a QC report 
+## To generate a QC report 
 
 It will automatically generate a pdf qc report 
 

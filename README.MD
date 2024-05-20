@@ -11,6 +11,53 @@ Spatial omics technologies are revolutionizing how we understand biological tiss
 `remotes::install_github('https://github.com/Center-for-Spatial-OMICs/SpatialQC')`
 
 
+### for dedenpency packages
+
+
+For users wanting to use annotation functions in `SpatialQC`, Package `RCTD` & `InSituType` are recommended.
+
+To install:
+
+```
+  if (!requireNamespace("remotes", quietly = TRUE)) {
+    install.packages("remotes")
+  }
+remotes::install_github("dmcable/RCTD")
+```
+```
+if (!requireNamespace("devtools", quietly = TRUE))
+  install.packages("devtools")
+devtools::install_github("https://github.com/Nanostring-Biostats/InSituType")
+```
+*Notes:* 
+
+Package `InSituType` needs a C++ compiler which can be installed as follows:
+
+#### gcc and gfortran are required for Mac users to install `InSituType`
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brew install gcc
+gcc --version
+mkdir -p ~/.R
+touch ~/.R/Makevars
+vi ~/.R/Makevars
+```
+Add the following lines to your Makevars file:
+
+```
+CC=/opt/homebrew/bin/gcc-14
+CXX=/opt/homebrew/bin/g++-14
+CXX11=/opt/homebrew/bin/g++-14
+CXX14=/opt/homebrew/bin/g++-14
+CXX17=/opt/homebrew/bin/g++-14
+FC=/opt/homebrew/bin/gfortran-14
+F77=/opt/homebrew/bin/gfortran-14
+```
+
+For others, please refer to our [Rscipts]()
+
+
 ## Functions
 
 ### readSpatial
