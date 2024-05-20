@@ -55,7 +55,7 @@ FC=/opt/homebrew/bin/gfortran-14
 F77=/opt/homebrew/bin/gfortran-14
 ```
 
-For others, please refer to our [Rscipts]()
+For others, please use our [Rscipts](https://github.com/Center-for-Spatial-OMICs/SpatialQC/blob/main/R/DependencyPackages.R)
 
 
 ## Functions
