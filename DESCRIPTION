@@ -33,7 +33,7 @@ Imports:
     gridExtra,
     magrittr,
     tibble,
-    lsa，
+    lsa,
     scater,
     SpatialFeatureExperiment
 URL: https://github.com/Center-for-Spatial-OMICs/SpatialQC, https://margery0011.github.io/SpatiaTouchstone/
