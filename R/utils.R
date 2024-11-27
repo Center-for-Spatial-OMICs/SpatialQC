@@ -315,14 +315,17 @@ readSpatial <- function(sample_id, path, platform=NULL, seurat=FALSE){
       obj_list[[sample_id]][['TxMatrix']] <- data.table::fread(file_name[1])
     }
 
-    # if(platform == 'Merscope') {
-    #   obj_list[[sample_id]] <- list()
-    #   pattern <- "exprMat_file.csv.gz$"
-    #   file_name <- list.files(path = path, pattern = pattern, full.names = TRUE)
-    #   obj_list[[sample_id]][['expMatrix']] <- data.table::fread(file_name)
-    #   obj_list[[sample_id]][['TxMatrix']] <- data.table::fread(file.path(path, 'transcripts.csv.gz'))
-    # }
-    #
+    if(platform == 'Merscope') {
+      obj_list[[sample_id]] <- list()
+      pattern <- "cell_by_gene.csv$"
+      file_name <- list.files(path = path, pattern = pattern, full.names = TRUE)
+      if(length(file_name) == 1) {
+        obj_list[[sample_id]][['expMatrix']] <- data.table::fread(file_name)
+      } else {
+        stop("Multiple or no files matched the pattern for expMatrix")
+      }
+      obj_list[[sample_id]][['TxMatrix']] <- data.table::fread(file.path(path, 'detected_transcripts.csv'))
+    }
 
     return(obj_list)
   }
@@ -401,9 +404,36 @@ readSpatial <- function(sample_id, path, platform=NULL, seurat=FALSE){
 
 
   } else if(platform == "Merscope"){
-    print("Working on support!")
-    stop()
-
+    a <- ReadVizgen(
+      path,
+      transcripts = NULL,
+      spatial = NULL,
+      molecules = NULL,
+      type = "centroids",
+      mol.type = "microns",
+      metadata = "fov",
+      filter = NA_character_,
+      z = 3L
+    )
+    transcripts <- a$transcripts
+    centroids <- a$centroids
+    colnames(transcripts) <- paste0("cell", centroids$cell)
+    seu_obj<- CreateSeuratObject(
+      counts = transcripts,
+      assay = "MERFISH"
+    ) 
+    centroid_coords <- as.matrix(centroids[, c("x", "y")])
+    rownames(centroid_coords) <- paste0("cell", centroids$cell)
+    colnames(centroid_coords) <- c("Centroid_1", "Centroid_2")
+    
+    seu_obj[["centroids"]] <- CreateDimReducObject(
+      embeddings = centroid_coords,
+      key = "Centroid_",
+      assay = "MERFISH"
+    ) 
+    seu_obj$sample_id <- sample_id
+    seu_obj@meta.data$platform <- platform
+    seu_obj@meta.data$path <- path #used in some functions to pull tx data
   } else{
     print("Not a supported platform")
     stop()
