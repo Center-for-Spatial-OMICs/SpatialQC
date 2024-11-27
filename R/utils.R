@@ -294,15 +294,21 @@ readSpatial <- function(sample_id, path, platform=NULL, seurat=FALSE){
     # create empty list
     obj_list <- list()
 
-    if(platform == 'Xenium') {
+    if (platform == 'Xenium') {
       obj_list[[sample_id]] <- list()
       obj_list[[sample_id]][['expMatrix']] <- Matrix::readMM(file.path(path, 'cell_feature_matrix/matrix.mtx.gz'))
-      cols <- data.table::fread(file.path(path, 'cell_feature_matrix/barcodes.tsv.gz'), header = F)
-      rows <- data.table::fread(file.path(path, 'cell_feature_matrix/features.tsv.gz'), header = F)
-      rownames(obj_list[[sample_id]][['expMatrix']]) <- rows$V2 ## this is the gene symbol column of the dataframe rows
-      colnames(obj_list[[sample_id]][['expMatrix']]) <- cols$V1 ## this is the barcodes of cells
-
-      obj_list[[sample_id]][['TxMatrix']] <- data.table::fread(file.path(path, 'transcripts.csv.gz'))
+      cols <- data.table::fread(file.path(path, 'cell_feature_matrix/barcodes.tsv.gz'), header = FALSE)
+      rows <- data.table::fread(file.path(path, 'cell_feature_matrix/features.tsv.gz'), header = FALSE)
+      rownames(obj_list[[sample_id]][['expMatrix']]) <- rows$V2  # This is the gene symbol column of the dataframe rows
+      colnames(obj_list[[sample_id]][['expMatrix']]) <- cols$V1  # This is the barcodes of cells
+      
+      # Check if 'transcripts.csv.gz' exists
+      transcripts_path <- file.path(path, 'transcripts.csv.gz')
+      if (file.exists(transcripts_path)) {
+        obj_list[[sample_id]][['TxMatrix']] <- data.table::fread(transcripts_path)
+      } else {
+        obj_list[[sample_id]][['TxMatrix']] <- data.table::fread(file.path(path, 'cell_feature_matrix/features.tsv.gz'))
+      }
     }
 
     if(platform == 'CosMx') {
